@@ -39,6 +39,13 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - AddSuccessPlayer
+  - DestroyObject
+  - DisablePlayer
+  - OnCountdownEnd
+  - SetCountDownTextActive
+  - UpdateCountDownText
+  - UpdatePosition
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
