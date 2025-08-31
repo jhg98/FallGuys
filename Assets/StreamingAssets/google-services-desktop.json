@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "145988286199",
+    "firebase_url": "https://fallguys-14f8e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fallguys-14f8e",
+    "storage_bucket": "fallguys-14f8e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145988286199:android:2f6c7f7a23b333c72b05f2",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.FallGuys"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvfS9mVUWAibKMausyxUZwlyXTJBtBpmM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
