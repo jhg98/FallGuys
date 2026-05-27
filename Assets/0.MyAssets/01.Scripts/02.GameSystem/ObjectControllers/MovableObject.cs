@@ -1,4 +1,4 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 public class MovableObject : MonoBehaviour
@@ -19,6 +19,8 @@ public class MovableObject : MonoBehaviour
 
     void Awake()
     {
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
+
         startPos = transform.position;
 
         switch (moveAxis)
@@ -37,7 +39,7 @@ public class MovableObject : MonoBehaviour
 
     void Update()
     {
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
         if (isWaiting)
         {

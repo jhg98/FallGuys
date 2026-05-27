@@ -1,4 +1,4 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 public class RotateObject : MonoBehaviour
@@ -10,7 +10,7 @@ public class RotateObject : MonoBehaviour
 
     void Update()
     {
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
         Vector3 axisDir = Vector3.zero;
 

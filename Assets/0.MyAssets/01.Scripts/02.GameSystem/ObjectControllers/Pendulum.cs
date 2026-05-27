@@ -1,25 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Photon.Pun;
 using UnityEngine;
 
 public class Pendulum : MonoBehaviour
 {
-	public float speed = 1.5f;
-	public float limit = 75f; //Limit in degrees of the movement
-	public bool randomStart = false; //If you want to modify the start position
-	private float random = 0;
+    public float speed = 1.5f;
+	public float limit = 75f; // 최고 각도
 
-	// Start is called before the first frame update
+	private Vector3 initialRotation;
+
 	void Awake()
     {
-		if(randomStart)
-			random = Random.Range(0f, 1f);
-	}
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
-    // Update is called once per frame
+        initialRotation = transform.localEulerAngles;
+    }
+
     void Update()
     {
-		float angle = limit * Mathf.Sin(Time.time + random * speed);
-		transform.localRotation = Quaternion.Euler(0, 0, angle);
+		float angle = limit * Mathf.Sin(Time.time * speed);
+		transform.localRotation = Quaternion.Euler(initialRotation.x, initialRotation.y, angle);
 	}
 }

@@ -1053,6 +1053,11 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 4701320954122324371, guid: 325b0a3bd2f9c7040a3821e2f64a280b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4958849657654589716, guid: 325b0a3bd2f9c7040a3821e2f64a280b,
         type: 3}
       propertyPath: maxForce
