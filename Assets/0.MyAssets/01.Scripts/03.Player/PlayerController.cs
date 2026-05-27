@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
@@ -115,13 +115,6 @@ public class PlayerController : MonoBehaviourPun
             return;
 
         CameraRotation();
-    }
-    private void OnApplicationFocus(bool focus)
-    {
-        if (photonView != null && !photonView.IsMine)
-            return;
-
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // 외부로부터 힘을 받는 메서드

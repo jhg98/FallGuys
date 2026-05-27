@@ -57,6 +57,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         timerManager = FindObjectOfType<TimerManager>();
         countDownManager = FindObjectOfType<CountDownManager>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void RegisterPlayer(PlayerController player)
