@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameSettings : MonoBehaviour
 {
@@ -22,7 +22,7 @@ public class GameSettings : MonoBehaviour
         Competitive
     }
 
-    public PlayMode CurrentPlayMode { get; set; } = PlayMode.Competitive;
+    public PlayMode CurrentPlayMode { get; set; } = PlayMode.Practice;
     public bool IsMapRandom { get; set; } = true;
     public string SelectedMap { get; set; } = "Map1"; // 맵 랜덤 여부가 false일 때 사용
     public int CurrentRound { get; set; } = 1;
