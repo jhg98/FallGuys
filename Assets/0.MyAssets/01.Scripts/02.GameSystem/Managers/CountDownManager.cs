@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using Photon.Pun;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CountDownManager : MonoBehaviourPun
 {
-    public TextMeshProUGUI countDownText;
+    public Text CountDownText;
     public int countDownTime = 3;
 
     // 마스터 클라이언트에서 카운트다운 후 모든 클라이언트에 동기화
@@ -32,18 +32,18 @@ public class CountDownManager : MonoBehaviourPun
     [PunRPC]
     private void SetCountDownTextActive(bool isActive)
     {
-        countDownText.gameObject.SetActive(isActive);
+        CountDownText.gameObject.SetActive(isActive);
     }
     [PunRPC]
     private void UpdateCountDownText(int time)
     {
         if (time > 0)
         {
-            countDownText.text = time.ToString();
+            CountDownText.text = time.ToString();
         }
         else if (time == 0)
         {
-            countDownText.text = "Start!";
+            CountDownText.text = "Go!";
         }
     }
     [PunRPC]

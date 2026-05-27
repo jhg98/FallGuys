@@ -1,10 +1,10 @@
-using Photon.Pun;
-using TMPro;
+﻿using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TimerManager : MonoBehaviourPun
 {
-    public TextMeshProUGUI TimerText;
+    public Text TimerText;
     public float timeLimit = 30f;
 
     private double startTime;

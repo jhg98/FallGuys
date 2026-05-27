@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -35,8 +35,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public TextMeshProUGUI EndText;
-    public TextMeshProUGUI ResultText;
+    public Text EndText;
+    public Text ResultText;
+    public Image TextBackgroundImage;
 
     public PlayerController LocalPlayer { get; private set; }
     public int RoundNumber { get; private set; } = 1;
@@ -119,9 +120,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSecondsRealtime(1f);
 
+        TextBackgroundImage.gameObject.SetActive(true);
         ResultText.gameObject.SetActive(false);
         EndText.gameObject.SetActive(true);
-        EndText.text = $"{roundNum}라운드 종료";
+        //EndText.text = $"{roundNum}라운드 종료";
+        EndText.text = "MATCH OVER";
 
         yield return new WaitForSecondsRealtime(1f);
 
@@ -149,8 +152,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         // 조작 불가 처리, UI 처리는 본인만 진행
         player.CanControlPlayer = false;
+
+        TextBackgroundImage.gameObject.SetActive(true);
         ResultText.gameObject.SetActive(true);
-        ResultText.text = "성공";
+        //ResultText.text = "성공";
+        ResultText.text = "SURVIVED";
 
         // 성공 인원은 모든 클라이언트에서 저장
         photonView.RPC(nameof(AddSuccessPlayer), RpcTarget.All, actorNum);
