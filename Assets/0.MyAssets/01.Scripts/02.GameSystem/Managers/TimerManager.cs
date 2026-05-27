@@ -23,7 +23,11 @@ public class TimerManager : MonoBehaviourPun
         }
         else
         {
+            isRunning = false;
             TimerText.gameObject.SetActive(false);
+
+            if (!PhotonNetwork.IsMasterClient) return;
+
             GameManager.Instance.EndRound();
         }
     }
@@ -36,11 +40,5 @@ public class TimerManager : MonoBehaviourPun
 
         TimerText.gameObject.SetActive(true);
         TimerText.text = startTime.ToString();
-    }
-    public void StopTimer()
-    {
-        isRunning = false;
-
-        TimerText.gameObject.SetActive(false);
     }
 }
