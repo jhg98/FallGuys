@@ -1,10 +1,16 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 public class PlayerRespawner : MonoBehaviourPun
 {
     public Transform lastCheckpoint;
 
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
     private void Start()
     {
         if (lastCheckpoint == null)
@@ -25,21 +31,14 @@ public class PlayerRespawner : MonoBehaviourPun
         Vector3 respawnPos = lastCheckpoint.position;
         Quaternion respawnRot = lastCheckpoint.rotation;
 
-        // 위치 변경 시 캐릭터 컨트롤러 비활성화 필요
-        var cc = GetComponent<CharacterController>();
+        if(rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
 
-        if (cc != null)
-        {
-            cc.enabled = false;
-            transform.position = respawnPos;
-            transform.rotation = respawnRot;
-            cc.enabled = true;
-        }
-        else
-        {
-            transform.position = respawnPos;
-            transform.rotation = respawnRot;
-        }
+        transform.position = respawnPos;
+        transform.rotation = respawnRot;
 
         if (photonView != null)
         {
@@ -49,6 +48,12 @@ public class PlayerRespawner : MonoBehaviourPun
     [PunRPC]
     public void UpdatePosition(Vector3 position, Quaternion rotation)
     {
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
         transform.position = position;
         transform.rotation = rotation;
     }
