@@ -45,8 +45,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private PlayerController LocalPlayer;
 
     private int roundNumber = 1;
-    private List<int> successPlayerNums;
-    private List<int> failPlayerNums;
+    private List<int> successPlayerNums = new();
+    private List<int> failPlayerNums = new();
     private bool isGameEnd = false;
     // 라운드별 결과 저장할 딕셔너리 추가 예정
 
