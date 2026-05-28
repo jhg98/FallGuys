@@ -39,19 +39,19 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Text ResultText;
     public Image TextBackgroundImage;
 
-    public PlayerController LocalPlayer { get; private set; }
-    public int RoundNumber { get; private set; } = 1;
-    public List<int> SuccessPlayerNums { get; private set; } = new();
-    public List<int> FailPlayerNums { get; private set; } = new();
-    // 라운드별 결과 저장할 딕셔너리 추가 예정
-
     private TimerManager timerManager;
     private CountDownManager countDownManager;
 
+    private PlayerController LocalPlayer;
+
+    private int roundNumber = 1;
+    private List<int> successPlayerNums;
+    private List<int> failPlayerNums;
+    private bool isGameEnd = false;
+    // 라운드별 결과 저장할 딕셔너리 추가 예정
+
     // 맵별 정보 저장 로직 추후 추가 예정
     private int successLimit = 1;
-
-    private bool isGameEnd = false;
 
     private void Start()
     {
@@ -73,14 +73,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (changedProps.ContainsKey("Spawned"))
         {
             if (!PhotonNetwork.IsMasterClient) return;
+
             TryStartRound();
         }
-    }
-    // 마스터 클라이언트가 변경되면 다시 시도
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-        TryStartRound();
     }
     private void TryStartRound()
     {
@@ -98,7 +93,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     private void StartRound()
     {
-        Debug.Log($"{RoundNumber}라운드 시작");
+        Debug.Log($"{roundNumber}라운드 시작");
 
         StartCoroutine(countDownManager.CountDown());
 
@@ -143,17 +138,17 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void AddSuccessPlayer(int actorNum)
     {
         // 성공 인원이 제한 인원보다 아직 작을 때만 추가
-        if (SuccessPlayerNums.Count < successLimit)
+        if (successPlayerNums.Count < successLimit)
         {
             Debug.Log("성공 인원 추가");
-            SuccessPlayerNums.Add(actorNum);
-            ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable { { "SuccessCount", SuccessPlayerNums.Count } };
+            successPlayerNums.Add(actorNum);
+            ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable { { "SuccessCount", successPlayerNums.Count } };
             PhotonNetwork.CurrentRoom.SetCustomProperties(props);
 
             if (!PhotonNetwork.IsMasterClient) return;
 
             // 성공 인원이 다 차면 라운드 종료
-            if (SuccessPlayerNums.Count >= successLimit)
+            if (successPlayerNums.Count >= successLimit)
             {
                 EndRound();
             }
@@ -162,35 +157,37 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void EndRound()
     {
-        Debug.Log($"{RoundNumber}라운드 종료");
+        Debug.Log($"{roundNumber}라운드 종료");
 
         if (!PhotonNetwork.IsMasterClient) return;
 
-        if (SuccessPlayerNums.Count > 1)
+        if (successPlayerNums.Count > 1)
         {
             Debug.Log("다음 라운드 진행");
             isGameEnd = false;
-            RoundNumber++;
+            roundNumber++;
         }
-        else if (SuccessPlayerNums.Count == 1)
+        else if (successPlayerNums.Count == 1)
         {
             Debug.Log("우승자 나옴");
             isGameEnd = true;
         }
-        else if (SuccessPlayerNums.Count == 0)
+        else if (successPlayerNums.Count == 0)
         {
             Debug.Log("성공자 없음");
             isGameEnd = true;
         }
 
-        photonView.RPC(nameof(EndRoundRPC), RpcTarget.All, RoundNumber);
+        photonView.RPC(nameof(EndRoundRPC), RpcTarget.All, roundNumber, isGameEnd);
     }
     [PunRPC]
-    private void EndRoundRPC(int roundNum)
+    private void EndRoundRPC(int roundNum, bool isEnd)
     {
-        StartCoroutine(EndPlay(roundNum));
+        roundNumber = roundNum;
+        isGameEnd = isEnd;
+        StartCoroutine(EndPlay());
     }
-    private IEnumerator EndPlay(int roundNum)
+    private IEnumerator EndPlay()
     {
         Instance.LocalPlayer.CanControlPlayer = false;
         Instance.LocalPlayer.CanControlCamera = false;
