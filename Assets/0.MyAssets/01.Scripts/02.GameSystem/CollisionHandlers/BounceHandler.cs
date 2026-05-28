@@ -66,11 +66,8 @@ public class BounceHandler : MonoBehaviour
                 float finalForce = maxForce * impact;
                 Debug.Log($"최종 힘: {finalForce}");
 
-                // 0과 최대 힘 사이에 최종 힘이 어디에 위치해있는지
-                float t = Mathf.InverseLerp(0f, maxForce, finalForce);
-
-                // 힘에 따라 스턴 시간 적용. 0.3, maxStunTime 사이에서 t 위치의 값.
-                stunTime = Mathf.Lerp(0.3f, maxStunTime, t);
+                // 힘에 따라 스턴 시간 적용. 0.3, maxStunTime 사이에서 impact 위치의 값.
+                stunTime = Mathf.Lerp(0.3f, maxStunTime, impact);
                 Debug.Log($"스턴 시간: {stunTime}");
 
                 Vector3 forceVector = bounceDir * finalForce;
