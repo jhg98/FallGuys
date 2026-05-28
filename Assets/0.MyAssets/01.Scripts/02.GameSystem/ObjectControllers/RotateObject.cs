@@ -3,39 +3,49 @@ using UnityEngine;
 
 public class RotateObject : MonoBehaviour
 {
-    public float speed = 180f;
-
     public enum Axis { X, Y, Z }
     public Axis rotationAxis = Axis.Z;
+
+    public float speed = 180f;
+
+    private Quaternion initialRotation;
 
     private Rigidbody rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        initialRotation = transform.rotation;
     }
 
     private void FixedUpdate()
     {
-        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
+        Vector3 axisDir = GetAxisDirection();
 
-        Vector3 axisDir = Vector3.zero;
+        // PhotonNetwork.Time 값은 매우 커질 수 있어서 처음부터 float로 변환하면 정밀도 떨어지므로
+        // double로 받은 후 주기로 나눈 나머지를 float로 변환하여 사용
+        double time = PhotonNetwork.IsConnected ? PhotonNetwork.Time : Time.time;
+        time = time % (360f / speed);
+        
+        float angle = (float)time * speed;
+        
+        Quaternion targetRotation = initialRotation * Quaternion.AngleAxis(angle, axisDir);
 
+        rb.MoveRotation(targetRotation);
+    }
+    private Vector3 GetAxisDirection()
+    {
         switch (rotationAxis)
         {
             case Axis.X:
-                axisDir = Vector3.right;
-                break;
+                return Vector3.right;
             case Axis.Y:
-                axisDir = Vector3.up;
-                break;
+                return Vector3.up;
             case Axis.Z:
-                axisDir = Vector3.forward;
-                break;
+                return Vector3.forward;
+            default:
+                return Vector3.zero;
         }
-
-        Quaternion deltaRotation = Quaternion.AngleAxis(speed * Time.fixedDeltaTime, axisDir);
-
-        rb.MoveRotation(rb.rotation * deltaRotation);
     }
 }

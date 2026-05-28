@@ -8,24 +8,17 @@ public class MovableObject : MonoBehaviour
 
     public float distance = 5f;
     public float speed = 3f;
-    public float offset = 0f; // 처음 위치만 다르게 주고 싶을 때 사용(시작점과 끝점의 중간에서 시작하고 싶다던가)
     public float waitTime = 1.5f; // 양 끝에서 멈춰있는 시간
-
-    private bool isForward = true;
+    public float offset = 0f; // 처음 위치만 다르게 주고 싶을 때 사용(시작점과 끝점의 중간에서 시작하고 싶다던가)
 
     private Vector3 startPos;
     private Vector3 endPos;
-
-    private float delayTimer = 0f;
-    private bool isWaiting = false;
 
     private Rigidbody rb;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-
-        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
         Vector3 axisDir = GetAxisDirection();
 
@@ -37,31 +30,39 @@ public class MovableObject : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
+        // PhotonNetwork.Time 값은 매우 커질 수 있어서 처음부터 float로 변환하면 정밀도 떨어지므로
+        // double로 받은 후 주기로 나눈 나머지를 float로 변환하여 사용
+        double time = PhotonNetwork.IsConnected ? PhotonNetwork.Time : Time.time;
+        float moveTime = distance / speed;
+        float cycleTime = (moveTime + waitTime) * 2;
+        float currentTime = (float)(time % cycleTime);
 
-        if (isWaiting)
+        Vector3 targetPos;
+
+        // 정방향
+        if(currentTime < moveTime)
         {
-            delayTimer += Time.fixedDeltaTime;
-            if (delayTimer >= waitTime)
-            {
-                isWaiting = false;
-                delayTimer = 0f;
-                isForward = !isForward; // 방향 반전
-            }
-            return;
+            float t = currentTime / moveTime;
+            targetPos = Vector3.Lerp(startPos, endPos, t);
+        }
+        // 대기
+        else if(currentTime < moveTime + waitTime)
+        {
+            targetPos = endPos;
+        }
+        // 역방향
+        else if(currentTime < moveTime + waitTime + moveTime)
+        {
+            float t = (currentTime - moveTime - waitTime) / moveTime;
+            targetPos = Vector3.Lerp(endPos, startPos, t);
+        }
+        // 대기
+        else
+        {
+            targetPos = startPos;
         }
 
-        Vector3 targetPos = isForward ? endPos : startPos;
-        Vector3 newPos = Vector3.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime);
-        
-        rb.MovePosition(newPos);
-
-        if (Vector3.Distance(rb.position, targetPos) < 0.01f)
-        {
-            rb.MovePosition(targetPos); // 보정
-
-            isWaiting = true;
-        }
+        rb.MovePosition(targetPos);
     }
 
     private Vector3 GetAxisDirection()
