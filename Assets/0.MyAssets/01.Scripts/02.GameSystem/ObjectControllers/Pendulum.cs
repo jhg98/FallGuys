@@ -8,16 +8,25 @@ public class Pendulum : MonoBehaviour
 
 	private Vector3 initialRotation;
 
+    private Rigidbody rb;
+
 	void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
         initialRotation = transform.localEulerAngles;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-		float angle = limit * Mathf.Sin(Time.time * speed);
-		transform.localRotation = Quaternion.Euler(initialRotation.x, initialRotation.y, angle);
-	}
+        if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
+
+        float angle = limit * Mathf.Sin(Time.time * speed);
+
+        Quaternion targetRotation = Quaternion.Euler(initialRotation.x, initialRotation.y, angle);
+        
+        rb.MoveRotation(targetRotation);
+    }
 }

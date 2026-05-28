@@ -8,42 +8,40 @@ public class MovableObject : MonoBehaviour
 
     public float distance = 5f;
     public float speed = 3f;
-    public float offset = 0f; // 처음 시작 위치만 다르게 주고 싶을 때 사용
+    public float offset = 0f; // 처음 위치만 다르게 주고 싶을 때 사용(시작점과 끝점의 중간에서 시작하고 싶다던가)
     public float waitTime = 1.5f; // 양 끝에서 멈춰있는 시간
 
     private bool isForward = true;
+
     private Vector3 startPos;
+    private Vector3 endPos;
 
     private float delayTimer = 0f;
     private bool isWaiting = false;
 
+    private Rigidbody rb;
+
     void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
-        startPos = transform.position;
+        Vector3 axisDir = GetAxisDirection();
 
-        switch (moveAxis)
-        {
-            case Axis.X:
-                transform.position += Vector3.right * offset;
-                break;
-            case Axis.Y:
-                transform.position += Vector3.up * offset;
-                break;
-            case Axis.Z:
-                transform.position += Vector3.forward * offset;
-                break;
-        }
+        startPos = transform.position;
+        endPos = startPos + axisDir * distance;
+
+        transform.position += axisDir * offset; // 초기 위치에 오프셋 적용
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
         if (isWaiting)
         {
-            delayTimer += Time.deltaTime;
+            delayTimer += Time.fixedDeltaTime;
             if (delayTimer >= waitTime)
             {
                 isWaiting = false;
@@ -53,52 +51,31 @@ public class MovableObject : MonoBehaviour
             return;
         }
 
-        Vector3 dir = Vector3.zero;
-        float pos = 0f;
-        float start = 0f;
+        Vector3 targetPos = isForward ? endPos : startPos;
+        Vector3 newPos = Vector3.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime);
+        
+        rb.MovePosition(newPos);
 
+        if (Vector3.Distance(rb.position, targetPos) < 0.01f)
+        {
+            rb.MovePosition(targetPos); // 보정
+
+            isWaiting = true;
+        }
+    }
+
+    private Vector3 GetAxisDirection()
+    {
         switch (moveAxis)
         {
             case Axis.X:
-                dir = Vector3.right;
-                pos = transform.position.x;
-                start = startPos.x;
-                break;
+                return Vector3.right;
             case Axis.Y:
-                dir = Vector3.up;
-                pos = transform.position.y;
-                start = startPos.y;
-                break;
+                return Vector3.up;
             case Axis.Z:
-                dir = Vector3.forward;
-                pos = transform.position.z;
-                start = startPos.z;
-                break;
-        }
-
-        if (isForward)
-        {
-            if (pos < start + distance)
-            {
-                transform.position += dir * speed * Time.deltaTime;
-            }
-            else
-            {
-                transform.position = startPos + dir * distance; // 위치 정확하게 보정
-                isWaiting = true;
-            }
-        }
-        else
-        {
-            if (pos > start)
-            {
-                transform.position -= dir * speed * Time.deltaTime;
-            }
-            else
-            {
-                transform.position = startPos;
-                isWaiting = true;
-            }
+                return Vector3.forward;
+            default:
+                return Vector3.zero;
         }
     }
 }

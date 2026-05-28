@@ -3,12 +3,19 @@ using UnityEngine;
 
 public class RotateObject : MonoBehaviour
 {
-    public float speed = 3f;
+    public float speed = 180f;
 
     public enum Axis { X, Y, Z }
     public Axis rotationAxis = Axis.Z;
 
-    void Update()
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
     {
         if (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient) return;
 
@@ -27,6 +34,8 @@ public class RotateObject : MonoBehaviour
                 break;
         }
 
-        transform.Rotate(axisDir, speed * Time.deltaTime / 0.01f, Space.Self);
+        Quaternion deltaRotation = Quaternion.AngleAxis(speed * Time.fixedDeltaTime, axisDir);
+
+        rb.MoveRotation(rb.rotation * deltaRotation);
     }
 }
