@@ -159,17 +159,20 @@ public class MatchingManager : MonoBehaviourPunCallbacks
             return;
         }
 
-        string roomName = PhotonNetwork.CurrentRoom.Name;
-        string mode = (string)PhotonNetwork.CurrentRoom.CustomProperties[ModeKey];
-        int minPlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties[MinPlayersKey];
-        int maxPlayers = PhotonNetwork.CurrentRoom.MaxPlayers;
-        int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+        //string roomName = PhotonNetwork.CurrentRoom.Name;
+        //string mode = (string)PhotonNetwork.CurrentRoom.CustomProperties[ModeKey];
+        //int minPlayers = (int)PhotonNetwork.CurrentRoom.CustomProperties[MinPlayersKey];
+        //int maxPlayers = PhotonNetwork.CurrentRoom.MaxPlayers;
+        //int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
 
-        string message = $"현재 방 이름: {roomName}\n" +
-                         $"모드: {mode}\n" +
-                         $"최소 인원: {minPlayers}\n" +
-                         $"최대 인원: {maxPlayers}\n" +
-                         $"현재 인원: {playerCount}";
+        //string message = $"현재 방 이름: {roomName}\n" +
+        //                 $"모드: {mode}\n" +
+        //                 $"최소 인원: {minPlayers}\n" +
+        //                 $"최대 인원: {maxPlayers}\n" +
+        //                 $"현재 인원: {playerCount}";
+
+        string message = $"인원: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}\n" +
+                          "다른 플레이어를 기다리는 중...";
 
         Debug.Log(message);
         statusText.text = message;
@@ -319,8 +322,10 @@ public class MatchingManager : MonoBehaviourPunCallbacks
 
         if (isRoomClosing)
         {
-            Debug.Log("방이 곧 닫힙니다.");
-            statusText.text = "방이 곧 닫힙니다.";
+            string message = $"인원: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}\n" +
+                              "방이 곧 닫힙니다.";
+            Debug.Log(message);
+            statusText.text = message;
             return;
         }
         else
