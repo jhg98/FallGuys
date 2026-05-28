@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -11,6 +11,8 @@ public class MatchingManager : MonoBehaviourPunCallbacks
 
     // 매칭 상태를 표시할 UI 텍스트
     [SerializeField] private TextMeshProUGUI statusText;
+
+    [SerializeField] private float closeRoomDelay = 5f;
 
     // 포톤 서버 설정
     private string gameVersion = "1";
@@ -189,7 +191,7 @@ public class MatchingManager : MonoBehaviourPunCallbacks
         isRoomClosing = true;
         PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { IsRoomClosingKey, isRoomClosing } });
 
-        Invoke(nameof(CloseRoom), 3f);
+        Invoke(nameof(CloseRoom), closeRoomDelay);
     }
     private void CloseRoom()
     {
