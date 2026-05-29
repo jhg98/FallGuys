@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviourPun
     public LayerMask groundLayer;
 
     [Space(10)]
-    public float knockdownForceThreshold = 10f;
+    public float knockdownForceThreshold = 20f;
     public float recoverySpeed = 2f;
 
     [Space(10)]
@@ -118,9 +118,9 @@ public class PlayerController : MonoBehaviourPun
     }
 
     // 외부로부터 힘을 받는 메서드
-    public void Hit(Vector3 force, float stunTime)
+    public void Hit(bool applyForce, Vector3 force, float stunTime)
     {
-        rb.AddForce(force, ForceMode.Impulse);
+        if(applyForce) rb.AddForce(force, ForceMode.Impulse);
 
         float impactForce = force.magnitude;
         if (impactForce < knockdownForceThreshold)

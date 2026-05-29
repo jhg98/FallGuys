@@ -119,6 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3ee4daf53b11f642949c52924d6ea73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxForce: 30
+  bounceMode: 0
+  applyForce: 1
+  maxForce: 20
   maxVelocity: 20
   maxStunTime: 1

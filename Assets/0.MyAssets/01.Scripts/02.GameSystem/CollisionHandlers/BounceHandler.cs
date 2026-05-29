@@ -1,4 +1,4 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 public class BounceHandler : MonoBehaviour
@@ -10,7 +10,7 @@ public class BounceHandler : MonoBehaviour
     }
     [SerializeField] private BounceMode bounceMode = BounceMode.ImpactDirection;
 
-    // 테스트 후 적절한 값으로 설정 필요
+    [SerializeField] private bool applyForce = true;
     [SerializeField] private float maxForce = 30f;
     [SerializeField] private float maxVelocity = 20f;
     [SerializeField] private float maxStunTime = 3f;
@@ -72,7 +72,7 @@ public class BounceHandler : MonoBehaviour
 
                 Vector3 forceVector = bounceDir * finalForce;
 
-                collision.gameObject.GetComponent<PlayerController>().Hit(forceVector, stunTime);
+                collision.gameObject.GetComponent<PlayerController>().Hit(applyForce, forceVector, stunTime);
             }
         }
     }

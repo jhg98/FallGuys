@@ -125,8 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961fa4ff4b5f6fa448e33eb86dbad1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1.5
-  limit: 75
+  speed: 3
+  limit: 60
 --- !u!114 &6926352286433356125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceMode: 0
+  applyForce: 0
   maxForce: 50
   maxVelocity: 20
   maxStunTime: 3

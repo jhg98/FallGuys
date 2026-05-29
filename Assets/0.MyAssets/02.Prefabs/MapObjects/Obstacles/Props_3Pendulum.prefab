@@ -115,9 +115,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceMode: 0
-  maxForce: 30
+  applyForce: 0
+  maxForce: 50
   maxVelocity: 20
-  maxStunTime: 3
+  maxStunTime: 2
 --- !u!1 &4190177003804668270
 GameObject:
   m_ObjectHideFlags: 0
