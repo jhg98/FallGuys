@@ -41,4 +41,10 @@ public class TimerManager : MonoBehaviourPun
         TimerText.gameObject.SetActive(true);
         TimerText.text = startTime.ToString();
     }
+
+    public void StopTimer()
+    {
+        isRunning = false;
+        //TimerText.gameObject.SetActive(false);
+    }
 }

@@ -192,6 +192,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         Instance.LocalPlayer.CanControlPlayer = false;
         Instance.LocalPlayer.CanControlCamera = false;
 
+        timerManager.StopTimer();
+
         yield return new WaitForSecondsRealtime(2f);
 
         TextBackgroundImage.gameObject.SetActive(true);
